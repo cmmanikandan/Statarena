@@ -4,7 +4,7 @@ import { User, Mail, Lock, ArrowLeft, Camera, Check, Loader2, AlertCircle } from
 import { cn } from '../lib/utils';
 import { auth, db } from '../firebase';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 interface SignUpProps {
   onBack: () => void;
@@ -42,18 +42,20 @@ export default function SignUp({ onBack, onSignUp, onLogin }: SignUpProps) {
     setLoading(true);
     setError(null);
     try {
+      const normalizedUsername = username.trim();
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      const defaultAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.uid}`;
 
       // Update profile
-      await updateProfile(user, { displayName: username });
+      await updateProfile(user, { displayName: normalizedUsername });
 
       // Create user document in Firestore
       await setDoc(doc(db, 'users', user.uid), {
         uid: user.uid,
-        username,
+        username: normalizedUsername,
         email,
-        avatar: 'default',
+        avatar: defaultAvatar,
         rank: 'Bronze',
         level: 1,
         xp: 0,
@@ -63,7 +65,18 @@ export default function SignUp({ onBack, onSignUp, onLogin }: SignUpProps) {
           kdRatio: 0,
           avgScore: 0
         },
-        themeColor: '#00E5FF'
+        themeColor: '#00E5FF',
+        createdAt: serverTimestamp()
+      });
+
+      // Keep public leaderboard profile in sync from signup itself.
+      await setDoc(doc(db, 'users_public', user.uid), {
+        username: normalizedUsername,
+        avatar: defaultAvatar,
+        rank: 'Bronze',
+        level: 1,
+        xp: 0,
+        previousXp: 0
       });
 
       onSignUp();
