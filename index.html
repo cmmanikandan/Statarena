@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230A0A0A'/><path d='M30 70 L50 30 L70 70' stroke='%2300E5FF' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='50' cy='60' r='5' fill='%237B61FF'/></svg>" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <title>StatArena</title>
+    <style>
+      body { margin: 0; background-color: #0A0A0A; }
+      #splash-screen {
+        position: fixed;
+        inset: 0;
+        background-color: #0A0A0A;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease-out;
+      }
+      .splash-logo {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        border: 2px solid #00E5FF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+        animation: pulse 2s infinite;
+      }
+      .splash-logo svg {
+        width: 40px;
+        height: 40px;
+        color: #00E5FF;
+      }
+      .splash-text {
+        margin-top: 20px;
+        color: #00E5FF;
+        font-family: monospace;
+        font-size: 24px;
+        font-weight: bold;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+      }
+      @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.4); }
+        70% { box-shadow: 0 0 0 20px rgba(0, 229, 255, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="splash-screen">
+      <div class="splash-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/></svg>
+      </div>
+      <div class="splash-text">StatArena</div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const splash = document.getElementById('splash-screen');
+          if (splash) {
+            splash.style.opacity = '0';
+            setTimeout(() => splash.remove(), 500);
+          }
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>
+

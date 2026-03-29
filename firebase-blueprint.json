@@ -1,0 +1,124 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Stores user profile information, stats, and preferences.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique user ID from Firebase Auth." },
+        "username": { "type": "string", "description": "Display name chosen by the user." },
+        "email": { "type": "string", "description": "User's email address." },
+        "avatar": { "type": "string", "description": "URL or identifier for the user's avatar." },
+        "rank": { "type": "string", "description": "Current rank (e.g., Bronze, Silver, Gold)." },
+        "level": { "type": "integer", "description": "User's current level based on experience points." },
+        "xp": { "type": "integer", "description": "Current experience points." },
+        "previousXp": { "type": "integer", "description": "Experience points from the previous match." },
+        "stats": {
+          "type": "object",
+          "properties": {
+            "matchesPlayed": { "type": "integer" },
+            "winRate": { "type": "number" },
+            "avgScore": { "type": "integer" }
+          }
+        },
+        "gameStats": {
+          "type": "object",
+          "description": "Stats for each specific game played."
+        },
+        "badges": { "type": "array", "items": { "type": "string" } },
+        "favoriteGame": { "type": "string" },
+        "themeColor": { "type": "string", "description": "User's preferred primary theme color." }
+      },
+      "required": ["uid", "username", "email"]
+    },
+    "Match": {
+      "title": "Match Record",
+      "description": "Details of a single gaming match.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string", "description": "ID of the user who played the match." },
+        "gameId": { "type": "string" },
+        "opponent": { "type": "string" },
+        "score": { "type": "string" },
+        "result": { "type": "string", "enum": ["Win", "Loss"] },
+        "duration": { "type": "string" },
+        "date": { "type": "string" },
+        "mode": { "type": "string" },
+        "xpGained": { "type": "integer" },
+        "rankChange": { "type": "integer" },
+        "metrics": { "type": "object" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "gameId", "result", "timestamp"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "A notification for the user.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string", "enum": ["match", "achievement", "system", "friend_request"] },
+        "read": { "type": "boolean" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "message", "timestamp"]
+    },
+    "Quest": {
+      "title": "Quest",
+      "description": "A daily quest definition.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "rewardXp": { "type": "integer" },
+        "target": { "type": "integer" }
+      },
+      "required": ["title", "description", "rewardXp", "target"]
+    },
+    "UserQuest": {
+      "title": "User Quest",
+      "description": "Tracks a user's progress on a daily quest.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "questId": { "type": "string" },
+        "progress": { "type": "integer" },
+        "completed": { "type": "boolean" },
+        "date": { "type": "string" }
+      },
+      "required": ["userId", "questId", "progress", "completed", "date"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile documents."
+    },
+    "/users_public/{userId}": {
+      "schema": "User",
+      "description": "Public user profile documents."
+    },
+    "/matches/{matchId}": {
+      "schema": "Match",
+      "description": "Collection of all match records."
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "Collection of user notifications."
+    },
+    "/quests/{questId}": {
+      "schema": "Quest",
+      "description": "Collection of quest definitions."
+    },
+    "/userQuests/{userQuestId}": {
+      "schema": "UserQuest",
+      "description": "Collection of user quest progress."
+    }
+  }
+}
