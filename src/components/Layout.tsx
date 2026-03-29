@@ -61,9 +61,10 @@ export default function Layout({ children, activeTab, setActiveTab, onAddMatch }
   ];
 
   return (
-    <div className="flex flex-col h-screen bg-background max-w-md mx-auto relative overflow-hidden">
+    <div className="h-screen bg-background md:p-6">
+      <div className="flex flex-col h-full max-w-md mx-auto relative overflow-hidden md:max-w-6xl md:rounded-3xl md:border md:border-white/10 md:bg-white/5 md:backdrop-blur-xl md:shadow-2xl md:flex-row">
       {/* Top Bar (Optional, for notifications) */}
-      <div className="absolute top-6 right-6 z-40">
+      <div className="absolute top-6 right-6 z-40 md:top-5 md:right-5">
         <button 
           onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
           className="p-2 rounded-full glass relative"
@@ -82,7 +83,7 @@ export default function Layout({ children, activeTab, setActiveTab, onAddMatch }
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
-            className="absolute top-20 right-6 w-72 glass rounded-2xl p-4 z-50 space-y-4 shadow-2xl"
+            className="absolute top-20 right-6 w-72 glass rounded-2xl p-4 z-50 space-y-4 shadow-2xl md:right-5"
           >
             <div className="flex justify-between items-center">
               <h3 className="font-heading font-bold text-sm">Notifications</h3>
@@ -126,8 +127,35 @@ export default function Layout({ children, activeTab, setActiveTab, onAddMatch }
         )}
       </AnimatePresence>
 
+      {/* Desktop Sidebar Navigation */}
+      <aside className="hidden md:flex md:w-64 md:shrink-0 md:flex-col md:justify-between md:border-r md:border-white/10 md:bg-black/30 md:pt-8 md:pb-6 md:px-4">
+        <div>
+          <div className="px-3 pb-8">
+            <div className="font-display text-xl text-primary neon-text-blue">StatArena</div>
+            <div className="text-xs uppercase tracking-[0.25em] text-white/40 mt-1">Web View</div>
+          </div>
+          <nav className="space-y-2">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={cn(
+                  "w-full flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors",
+                  activeTab === tab.id
+                    ? "bg-primary/15 text-primary border border-primary/30"
+                    : "text-white/60 hover:bg-white/5 hover:text-white"
+                )}
+              >
+                <tab.icon className="w-5 h-5" />
+                <span className="font-medium">{tab.label}</span>
+              </button>
+            ))}
+          </nav>
+        </div>
+      </aside>
+
       {/* Content Area */}
-      <main className="flex-1 overflow-y-auto no-scrollbar pb-24">
+      <main className="flex-1 overflow-y-auto no-scrollbar pb-24 md:pb-8 md:px-2">
         {children}
       </main>
 
@@ -136,13 +164,13 @@ export default function Layout({ children, activeTab, setActiveTab, onAddMatch }
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={onAddMatch}
-        className="absolute bottom-24 right-6 w-14 h-14 rounded-full bg-primary flex items-center justify-center shadow-[0_0_20px_rgba(0,229,255,0.5)] z-20"
+        className="absolute bottom-24 right-6 w-14 h-14 rounded-full bg-primary flex items-center justify-center shadow-[0_0_20px_rgba(0,229,255,0.5)] z-20 md:bottom-8 md:right-8"
       >
         <Plus className="text-background w-8 h-8" />
       </motion.button>
 
       {/* Bottom Navigation */}
-      <nav className="h-20 glass border-t border-white/10 flex items-center justify-around px-4 z-30">
+      <nav className="h-20 glass border-t border-white/10 flex items-center justify-around px-4 z-30 md:hidden">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -172,6 +200,7 @@ export default function Layout({ children, activeTab, setActiveTab, onAddMatch }
           </button>
         ))}
       </nav>
+      </div>
     </div>
   );
 }
